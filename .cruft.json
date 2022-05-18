@@ -1,0 +1,51 @@
+{
+  "template": "https://github.com/lkubb/salt-template-formula",
+  "commit": "50a694adefdf54f1ca465db433c033ca764942bc",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "_extensions": [
+        "local_extensions.YAMLDumper"
+      ],
+      "_jinja2_env_vars": {
+        "block_start_string": "{!",
+        "block_end_string": "!}",
+        "variable_start_string": "{=",
+        "variable_end_string": "=}",
+        "comment_start_string": "{@",
+        "comment_end_string": "@}"
+      },
+      "name": "MariaDB",
+      "abbr": "mariadb",
+      "abbr_pysafe": "mariadb",
+      "pkg": "",
+      "needs_repo": "",
+      "config": "/etc/mysql/my.cnf",
+      "service": "mysql",
+      "subcomponent": "",
+      "subcomponent_config": "",
+      "git_username": "lkubb",
+      "_lookup": {
+        "pkg": {
+          "client": "mariadb-client",
+          "python": "python3-mysqldb",
+          "server": "mariadb-server"
+        }
+      },
+      "_settings": {
+        "config": {},
+        "clean_databases": false,
+        "databases": {},
+        "databases_absent": [],
+        "users": {},
+        "users_absent": [],
+        "install": {
+          "client": true,
+          "server": true
+        }
+      },
+      "_template": "https://github.com/lkubb/salt-template-formula"
+    }
+  },
+  "directory": null
+}

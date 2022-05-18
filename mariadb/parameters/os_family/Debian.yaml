@@ -1,0 +1,60 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+#
+# Set values specific to:
+#   salt['config.get']('os_family') == Debian.
+#
+# You just need to add the key:values for this `os_family` that differ
+# from `defaults.yaml` + `<osarch>.yaml`.
+#
+# If you do not need to provide defaults via the `os_family` config,
+# you can remove this file or provide at least an empty dict, e.g.
+# values: {}
+---
+values:
+  lookup:
+    pkg_manager: apt
+    config: /etc/mysql/mariadb.cnf
+    config_dir: /etc/mysql/mariadb.conf.d
+    config_files:
+      client: 50-client.cnf
+      clients: 50-mysql-clients.cnf
+      galera: 60-galera.cnf
+      server: 50-server.cnf
+    group_file_mapping:
+      client:
+        - client
+        - client-mariadb
+      clients:
+        - mysql
+        - mysql_upgrade
+        - mysqladmin
+        - mysqlbinlog
+        - mysqlcheck
+        - mysqldump
+        - mysqlimport
+        - mysqlshow
+        - mysqlslap
+      galera:
+        - galera
+      server:
+        - server
+        - mysqld
+        - embedded
+        - mariadb*
+  config:
+    mysqld:
+      user: mysql
+      pid_file: /run/mysqld/mysqld.pid
+      basedir: /usr
+      datadir: /var/lib/mysql
+      tmpdir: /tmp
+      lc_messages_dir: /usr/share/mysql
+      lc_messages: en_us
+      skip_external_locking: true
+      skip_name_resolve: false
+      bind_address: 127.0.0.1
+      expire_logs_days: 10
+      character_set_server: utf8mb4
+      collation_server: utf8mb4_general_ci
+...

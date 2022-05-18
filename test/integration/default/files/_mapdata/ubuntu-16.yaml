@@ -1,0 +1,47 @@
+# yamllint disable rule:indentation rule:line-length
+# Ubuntu-16.04
+---
+values:
+  added_in_defaults: defaults_value
+  added_in_lookup: lookup_value
+  added_in_pillar: pillar_value
+  lookup:
+    arch: amd64
+    rootgroup: root
+    config: '/etc/mysql/my.cnf'
+    service:
+      name: mysql
+    pkg:
+      client: mariadb-client
+      python: python3-mysqldb
+      server: mariadb-server
+  clean_databases: false
+  config: {}
+  databases: {}
+  databases_absent: []
+  install:
+    client: true
+    server: true
+  users: {}
+  users_absent: []
+  map_jinja:
+    sources:
+    - Y:G@osarch
+    - Y:G@os_family
+    - Y:G@os
+    - Y:G@osfinger
+    - C@mariadb
+    - Y:G@id
+  master: template-master
+  tofs:
+    files_switch:
+    - any/path/can/be/used/here
+    - id
+    - roles
+    - osfinger
+    - os
+    - os_family
+    source_files:
+      mariadb-config-file-file-managed:
+      - example.tmpl.jinja
+  winner: pillar

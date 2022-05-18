@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+#
+# Set default values.
+---
+values:
+  lookup:
+    rootgroup: root
+    config: '/etc/mysql/my.cnf'
+    service:
+      name: mysql
+    pkg:
+      client: mariadb-client
+      python: python3-mysqldb
+      server: mariadb-server
+  clean_databases: false
+  config: {}
+  databases: {}
+  databases_absent: []
+  install:
+    client: true
+    server: true
+  users: {}
+  users_absent: []
+  # Just here for testing
+  added_in_defaults: defaults_value
+  winner: defaults
+...

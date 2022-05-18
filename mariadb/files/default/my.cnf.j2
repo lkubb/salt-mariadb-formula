@@ -1,0 +1,43 @@
+{%- macro render_opt(name, val) %}
+{%-   if val is not none %}
+{%-     if val is not integer and val in [true, false] and val %}
+  {{ name }}
+{%-     else %}
+{%-       set pretty_width = 40 - (name | length) %}
+{%-       if val | is_list %}
+{%-         for item in val %}
+  {{ name ~ (" " * pretty_width) }} = {{ item }}
+{%-         endfor %}
+{%-       else %}
+  {{ name ~ (" " * pretty_width) }} = {{ val }}
+{%-       endif %}
+{%-     endif %}
+{%-   endif %}
+{%- endmacro -%}
+
+{%- macro render_include(path, is_dir=True) %}
+!include{{ "dir" if is_dir }{{ path }}
+{%- endmacro %}
+
+# This file is managed by Salt.
+# Manual changes might be overwritten.
+
+{% for group, configs in mariadb.config.items() %}
+{%-   if configs %}
+[{{ group }}]
+{%-     for conf, val in configs.items() %}
+{%-       if "include" == conf %}
+{%-         for path in val %}
+{%-           if path is mapping %}
+{%-             set is_dir, path = path.is_dir, path.path %}
+{%-           else %}
+{%-             set is_dir = true %}
+{%-           endif %}
+{{- render_include(path, is_dir) }}
+{%-         endfor %}
+{%-       else %}
+{{- render_opt(conf, val) }}
+{%-       endif %}
+{%-     endfor %}
+{%-   endif %}
+{%- endfor %}

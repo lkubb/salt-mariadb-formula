@@ -1,0 +1,28 @@
+{%- macro render_opt(name, val) %}
+{%-   if val is not none %}
+{%-     if val is not integer and val in [true, false] and val %}
+  {{ name }}
+{%-     else %}
+{%-       set pretty_width = 40 - (name | length) %}
+{%-       if val | is_list %}
+{%-         for item in val %}
+  {{ name ~ (" " * pretty_width) }} = {{ item }}
+{%-         endfor %}
+{%-       else %}
+  {{ name ~ (" " * pretty_width) }} = {{ val }}
+{%-       endif %}
+{%-     endif %}
+{%-   endif %}
+{%- endmacro -%}
+
+# This file is managed by Salt.
+# Manual changes might be overwritten.
+
+{%  for group in render_groups %}
+{%    if group in mariadb.config %}
+[{{ group }}]
+{%-     for conf, val in mariadb.config[group].items() %}
+{{- render_opt(conf, val) }}
+{%-     endfor %}
+{%-   endif %}
+{%- endfor %}
