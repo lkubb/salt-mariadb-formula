@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] %}
-{%- set sls_config_file = tplroot ~ '.config.file' %}
-{%- set sls_databases_managed = tplroot ~ '.databases.managed' %}
+{%- set tplroot = tpldir.split("/")[0] %}
+{%- set sls_config_file = tplroot ~ ".config.file" %}
+{%- set sls_databases_managed = tplroot ~ ".databases.managed" %}
 {%- from tplroot ~ "/map.jinja" import mapdata as mariadb with context %}
 
 include:

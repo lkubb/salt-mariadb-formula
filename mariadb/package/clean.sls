@@ -1,14 +1,18 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] %}
-{%- set sls_config_clean = tplroot ~ '.config.clean' %}
+{#-
+    Removes the mariadb package.
+    Has a depency on `mariadb.config.clean`_.
+#}
+
+{%- set tplroot = tpldir.split("/")[0] %}
+{%- set sls_config_clean = tplroot ~ ".config.clean" %}
 {%- from tplroot ~ "/map.jinja" import mapdata as mariadb with context %}
 
 include:
   - {{ sls_config_clean }}
 
-mariadb-package-clean-pkg-removed:
+MariaDB is removed:
   pkg.removed:
     - pkgs:
 {%- if mariadb.install.client %}

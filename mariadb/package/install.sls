@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] %}
+{%- set tplroot = tpldir.split("/")[0] %}
 {%- from tplroot ~ "/map.jinja" import mapdata as mariadb with context %}
 
-mariadb-package-install-pkg-installed:
+MariaDB is installed:
   pkg.installed:
     - pkgs:
 {%- if mariadb.install.client %}
