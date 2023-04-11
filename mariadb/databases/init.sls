@@ -2,7 +2,7 @@
 
 {#-
     Manages databases.
-    Has a dependency on `mariadb.config`_.
+    Has a dependency on `mariadb.service`_.
 #}
 
 include:
