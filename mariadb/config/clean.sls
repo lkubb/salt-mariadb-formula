@@ -9,7 +9,7 @@ include:
 
 {%- if "config_dir" not in mariadb.lookup %}
 
-mariadb-config-clean-file-absent:
+MariaDB config is absent:
   file.absent:
     - name: {{ mariadb.lookup.config }}
     - require:

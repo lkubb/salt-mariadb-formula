@@ -10,11 +10,11 @@ include:
 
 {%- if "config_dir" not in mariadb.lookup %}
 
-mariadb-config-file-file-managed:
+MariaDB config is managed:
   file.managed:
     - name: {{ mariadb.lookup.config }}
     - source: {{ files_switch(["my.cnf.j2"],
-                              lookup="mariadb-config-file-file-managed"
+                              lookup="MariaDB config is managed"
                  )
               }}
     - mode: '0644'

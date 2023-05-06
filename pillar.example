@@ -19,6 +19,7 @@ mariadb:
       pip: pymysql
       python: python3-mysqldb
       server: mariadb-server
+    socket: /run/mysqld/mysqld.sock
 
   tofs:
       # The files_switch key serves as a selector for alternative

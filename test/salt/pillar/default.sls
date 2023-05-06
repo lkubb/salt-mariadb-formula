@@ -14,6 +14,7 @@ mariadb:
       pip: pymysql
       python: python3-mysqldb
       server: mariadb-server
+    socket: /run/mysqld/mysqld.sock
   clean_databases: false
   config: {}
   databases: {}

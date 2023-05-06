@@ -26,6 +26,7 @@
       "subcomponent_config": "",
       "git_username": "lkubb",
       "lookup": {
+        "socket": "/run/mysqld/mysqld.sock",
         "pkg": {
           "client": "mariadb-client",
           "pip": "pymysql",

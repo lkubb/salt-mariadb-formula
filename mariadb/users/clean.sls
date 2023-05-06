@@ -18,10 +18,12 @@ Wanted grants for user {{ user }} are absent:
 {%-     endfor %}
 {%-   endif %}
 {%- endfor %}
+    - connection_unix_socket: {{ mariadb.lookup.socket }}
 
 {%- if mariadb.users %}
 
 Wanted MariaDB users are absent:
   mysql_user.absent:
     - names: {{ mariadb.users.keys() | list | json }}
+    - connection_unix_socket: {{ mariadb.lookup.socket }}
 {%- endif %}

@@ -24,6 +24,7 @@ MariaDB user {{ user }} is present:
 {%-   elif config.get("passwordless") %}
     - passwordless: true
 {%-   endif %}
+    - connection_unix_socket: {{ mariadb.lookup.socket }}
     - require:
       - Salt can manage MariaDB
       - sls: {{ sls_config_file }}
@@ -34,6 +35,7 @@ MariaDB user {{ user }} is present:
 Unwanted MariaDB users are absent:
   mysql_user.absent:
     - names: {{ mariadb.users_absent | json }}
+    - connection_unix_socket: {{ mariadb.lookup.socket }}
     - require:
       - Salt can manage MariaDB
       - sls: {{ sls_config_file }}
@@ -51,6 +53,7 @@ Wanted grants for user {{ user }} are present:
         - grant: {{ grants | join(",") }}
         - database: {{ db }}
 {%-     endfor %}
+    - connection_unix_socket: {{ mariadb.lookup.socket }}
     - require:
       - MariaDB user {{ user }} is present
       - sls: {{ sls_databases_managed }}
@@ -64,6 +67,7 @@ Unwanted grants for user {{ user }} are absent:
 {%-     for db in config.grants_unwanted %}
       - {{ user }}_{{ db }}
 {%-     endfor %}
+    - connection_unix_socket: {{ mariadb.lookup.socket }}
     - require:
       - MariaDB user {{ user }} is present
       - sls: {{ sls_databases_managed }}
