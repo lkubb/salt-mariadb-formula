@@ -28,6 +28,7 @@
       "lookup": {
         "pkg": {
           "client": "mariadb-client",
+          "pip": "pymysql",
           "python": "python3-mysqldb",
           "server": "mariadb-server"
         }

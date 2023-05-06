@@ -25,7 +25,7 @@ MariaDB user {{ user }} is present:
     - passwordless: true
 {%-   endif %}
     - require:
-      - pkg: {{ mariadb.lookup.pkg.python }}
+      - Salt can manage MariaDB
       - sls: {{ sls_config_file }}
 {%- endfor %}
 
@@ -35,7 +35,7 @@ Unwanted MariaDB users are absent:
   mysql_user.absent:
     - names: {{ mariadb.users_absent | json }}
     - require:
-      - pkg: {{ mariadb.lookup.pkg.python }}
+      - Salt can manage MariaDB
       - sls: {{ sls_config_file }}
 {%- endif %}
 

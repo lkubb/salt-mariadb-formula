@@ -13,6 +13,15 @@ MariaDB is installed:
       - {{ mariadb.lookup.pkg.server }}
 {%- endif %}
 
+{#- Very crude onedir check – relenv pythonexecutable does not end with `run #}
+{%- if grains.pythonexecutable.startswith("/opt/saltstack") %}
+
+Salt can manage MariaDB:
+  pip.installed:
+    - name: {{ mariadb.lookup.pkg.pip }}
+{%- else %}
+
 Salt can manage MariaDB:
   pkg.installed:
     - name: {{ mariadb.lookup.pkg.python }}
+{%- endif %}

@@ -11,6 +11,7 @@ mariadb:
       name: mysql
     pkg:
       client: mariadb-client
+      pip: pymysql
       python: python3-mysqldb
       server: mariadb-server
   clean_databases: false
