@@ -11,6 +11,7 @@
 
 include:
   - {{ sls_config_clean }}
+  - {{ slsdotpath }}.repo.clean
 
 MariaDB is removed:
   pkg.removed:

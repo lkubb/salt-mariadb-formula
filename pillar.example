@@ -9,7 +9,10 @@ mariadb:
   databases_absent: []
   install:
     client: true
+    galera: false
+    method: pkg
     server: true
+    version: '10.11'
   users: {}
   users_absent: []
 

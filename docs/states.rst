@@ -21,6 +21,12 @@ and then starts the associated mariadb service.
 Installs the mariadb package only.
 
 
+``mariadb.package.repo``
+^^^^^^^^^^^^^^^^^^^^^^^^
+This state will install the configured mariadb repository.
+This works for apt/dnf/yum/zypper-based distributions only by default.
+
+
 ``mariadb.config``
 ^^^^^^^^^^^^^^^^^^
 Manages the mariadb service configuration.
@@ -60,6 +66,12 @@ uninstalls the package.
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 Removes the mariadb package.
 Has a dependency on `mariadb.config.clean`_.
+
+
+``mariadb.package.repo.clean``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This state will remove the configured mariadb repository.
+This works for apt/dnf/yum/zypper-based distributions only by default.
 
 
 ``mariadb.config.clean``

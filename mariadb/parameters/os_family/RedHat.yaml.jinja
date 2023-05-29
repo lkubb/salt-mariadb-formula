@@ -1,0 +1,27 @@
+# vim: ft=yaml
+#
+# Set values specific to:
+#   salt['config.get']('os_family') == RedHat.
+#
+# You just need to add the key:values for this `os_family` that differ
+# from `defaults.yaml` + `<osarch>.yaml`.
+#
+# If you do not need to provide defaults via the `os_family` config,
+# you can remove this file or provide at least an empty dict, e.g.
+# values: {}
+{%- set os = "rhel" if grains["os"] | lower in ["rocky", "almalinux", "redhat"] else grains["os"] | lower %}
+---
+values:
+  lookup:
+    pkg_manager: yum
+    repos:
+      stable:
+        humanname: MariaDB stable
+        name: mariadb_stable
+        baseurl: https://mirror.mariadb.org/yum/{version}/{{ os }}/$releasever/$basearch
+        gpgkey: https://supplychain.mariadb.com/MariaDB-Server-GPG-KEY
+        gpgcheck: 1
+        repo_gpgcheck: 1
+        sslverify: 1
+        sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+...

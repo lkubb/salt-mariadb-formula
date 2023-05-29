@@ -13,6 +13,16 @@
 values:
   lookup:
     pkg_manager: apt
+    repos:
+      stable:
+        humanname: MariaDB stable
+        name: >-
+          deb [signed-by=/usr/share/keyrings/mariadb.key]
+          https://mirror.mariadb.org/repo/{version}/debian
+          {{ grains["oscodename"] }} main
+        key_url: https://supplychain.mariadb.com/mariadb-keyring-2019.gpg
+        file: /etc/apt/sources.list.d/mariadb.list
+        aptkey: false
     config: /etc/mysql/mariadb.cnf
     config_dir: /etc/mysql/mariadb.conf.d
     config_files:

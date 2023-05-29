@@ -3,6 +3,12 @@
 {%- set tplroot = tpldir.split("/")[0] %}
 {%- from tplroot ~ "/map.jinja" import mapdata as mariadb with context %}
 
+{%- if mariadb.install.method == "repo" %}
+
+include:
+  - {{ slsdotpath }}.repo
+{%- endif %}
+
 MariaDB is installed:
   pkg.installed:
     - pkgs:

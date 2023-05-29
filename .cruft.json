@@ -19,7 +19,7 @@
       "abbr": "mariadb",
       "abbr_pysafe": "mariadb",
       "pkg": "",
-      "needs_repo": "",
+      "needs_repo": "y",
       "config": "/etc/mysql/my.cnf",
       "service": "mysql",
       "subcomponent": "",
@@ -43,7 +43,10 @@
         "users_absent": [],
         "install": {
           "client": true,
-          "server": true
+          "galera": false,
+          "method": "pkg",
+          "server": true,
+          "version": "10.11"
         }
       },
       "_template": "https://github.com/lkubb/salt-template-formula"

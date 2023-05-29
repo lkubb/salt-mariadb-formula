@@ -1,0 +1,10 @@
+# vim: ft=yaml
+---
+values:
+  lookup:
+    repos:
+      stable:
+        name: >-
+          deb [signed-by=/usr/share/keyrings/mariadb.key]
+          https://mirror.mariadb.org/repo/{version}/ubuntu
+          {{ grains["oscodename"] }} main

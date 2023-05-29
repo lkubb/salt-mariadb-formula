@@ -6,6 +6,8 @@ mariadb:
     # Just for testing purposes
     winner: lookup
     added_in_lookup: lookup_value
+    enablerepo:
+      stable: true
     config: '/etc/mysql/my.cnf'
     service:
       name: mysql
@@ -21,7 +23,10 @@ mariadb:
   databases_absent: []
   install:
     client: true
+    galera: false
+    method: pkg
     server: true
+    version: '10.11'
   users: {}
   users_absent: []
 

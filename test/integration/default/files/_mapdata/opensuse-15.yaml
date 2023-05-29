@@ -8,6 +8,8 @@ values:
   lookup:
     arch: amd64
     rootgroup: root
+    enablerepo:
+      stable: true
     config: '/etc/mysql/my.cnf'
     service:
       name: mysql
@@ -23,7 +25,10 @@ values:
   databases_absent: []
   install:
     client: true
+    galera: false
+    method: pkg
     server: true
+    version: '10.11'
   users: {}
   users_absent: []
   map_jinja:
