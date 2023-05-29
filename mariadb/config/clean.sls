@@ -1,5 +1,10 @@
 # vim: ft=sls
 
+{#-
+    Removes the configuration of the mariadb service and has a
+    dependency on `mariadb.service.clean`_.
+#}
+
 {%- set tplroot = tpldir.split("/")[0] %}
 {%- set sls_service_clean = tplroot ~ ".service.clean" %}
 {%- from tplroot ~ "/map.jinja" import mapdata as mariadb with context %}

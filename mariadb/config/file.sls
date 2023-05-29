@@ -3,7 +3,7 @@
 {%- set tplroot = tpldir.split("/")[0] %}
 {%- set sls_package_install = tplroot ~ ".package.install" %}
 {%- from tplroot ~ "/map.jinja" import mapdata as mariadb with context %}
-{%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
+{%- from tplroot ~ "/libtofsstack.jinja" import files_switch with context %}
 
 include:
   - {{ sls_package_install }}
@@ -13,8 +13,10 @@ include:
 MariaDB config is managed:
   file.managed:
     - name: {{ mariadb.lookup.config }}
-    - source: {{ files_switch(["my.cnf.j2"],
-                              lookup="MariaDB config is managed"
+    - source: {{ files_switch(
+                    ["my.cnf", "my.cnf.j2"],
+                    config=mariadb,
+                    lookup="MariaDB config is managed",
                  )
               }}
     - mode: '0644'
@@ -33,8 +35,10 @@ MariaDB config is managed:
 MariaDB {{ scope }} config is managed:
   file.managed:
     - name: {{ mariadb.lookup.config_dir | path_join(mariadb.lookup.config_files[scope]) }}
-    - source: {{ files_switch(["scope.cnf.j2"],
-                              lookup="MariaDB " ~ scope ~ " config is managed"
+    - source: {{ files_switch(
+                    [scope ~ ".cnf", "scope.cnf.j2"],
+                    config=mariadb,
+                    lookup="MariaDB " ~ scope ~ " config is managed",
                  )
               }}
     - mode: '0644'

@@ -109,12 +109,13 @@ uninstalls the package.
 ``mariadb.package.clean``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 Removes the mariadb package.
-Has a depency on `mariadb.config.clean`_.
+Has a dependency on `mariadb.config.clean`_.
 
 
 ``mariadb.config.clean``
 ^^^^^^^^^^^^^^^^^^^^^^^^
-
+Removes the configuration of the mariadb service and has a
+dependency on `mariadb.service.clean`_.
 
 
 ``mariadb.service.clean``

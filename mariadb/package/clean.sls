@@ -2,7 +2,7 @@
 
 {#-
     Removes the mariadb package.
-    Has a depency on `mariadb.config.clean`_.
+    Has a dependency on `mariadb.config.clean`_.
 #}
 
 {%- set tplroot = tpldir.split("/")[0] %}
