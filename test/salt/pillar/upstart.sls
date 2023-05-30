@@ -11,12 +11,77 @@ mariadb:
     config: '/etc/mysql/my.cnf'
     service:
       name: mysql
+    config_defaults:
+      pkg:
+        client: {}
+        client-mariadb: {}
+        embedded: {}
+        galera: {}
+        mysql: {}
+        mysql_upgrade: {}
+        mysqladmin: {}
+        mysqlbinlog: {}
+        mysqlcheck: {}
+        mysqld: {}
+        mysqldump: {}
+        mysqlimport: {}
+        mysqlshow: {}
+        mysqlslap: {}
+        server: {}
+      repo:
+        client: {}
+        client-mariadb: {}
+        embedded: {}
+        galera: {}
+        mysql: {}
+        mysql_upgrade: {}
+        mysqladmin: {}
+        mysqlbinlog: {}
+        mysqlcheck: {}
+        mysqld: {}
+        mysqldump: {}
+        mysqlimport: {}
+        mysqlshow: {}
+        mysqlslap: {}
+        server: {}
+    config_galera:
+      binlog_format: ROW
+      default_storage_engine: InnoDB
+      innodb_autoinc_lock_mode: 2
+      innodb_doublewrite: 1
+      wsrep_on: 'ON'
+    group: mysql
+    libgalera:
+      pkg: /usr/lib/galera/libgalera_smm.so
+      repo: /usr/lib/galera/libgalera_smm.so
     pkg:
-      client: mariadb-client
+      client:
+        pkg: mariadb-client
+        repo: mariadb-client
+      galera:
+        pkg: false
+        repo: false
       pip: pymysql
       python: python3-mysqldb
-      server: mariadb-server
-    socket: /run/mysqld/mysqld.sock
+      server:
+        pkg: mariadb-server
+        repo: mariadb-server
+    socket:
+      pkg: /run/mysqld/mysqld.sock
+      repo: /run/mysqld/mysqld.sock
+    user: mysql
+  cert:
+    ca_server: null
+    cn: null
+    days_remaining: 7
+    days_valid: 30
+    intermediate: []
+    root: ''
+    san: []
+    signing_cert: null
+    signing_policy: null
+    signing_private_key: null
+    signing_private_key_passphrase: null
   clean_databases: false
   config: {}
   databases: {}
@@ -27,8 +92,22 @@ mariadb:
     method: pkg
     server: true
     version: '10.11'
+  manage_firewall: false
   users: {}
   users_absent: []
+  vault:
+    connection_name: mariadb
+    database_mount: database
+    init: false
+    mariadb_host: null
+    mariadb_port: null
+    max_connection_lifetime: 0s
+    max_idle_connections: 0
+    max_open_connections: 4
+    plugin_version: null
+    tls_server_name: ''
+    tls_skip_verify: false
+  vault_roles: []
 
   tofs:
     # The files_switch key serves as a selector for alternative

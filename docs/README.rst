@@ -14,7 +14,7 @@ MariaDB Formula
    :scale: 100%
    :target: https://github.com/pre-commit/pre-commit
 
-Manage MariaDB with Salt.
+Manage MariaDB or a Galera cluster of MariaDB nodes with Salt.
 
 .. contents:: **Table of Contents**
    :depth: 1
@@ -41,7 +41,9 @@ If you need (non-default) configuration, please refer to:
 
 Special notes
 -------------
-- On Debian, MariaDB root user has no password by default and running ``mysql_secure_installation`` `is discouraged <https://salsa.debian.org/mariadb-team/mariadb-10.5/-/blob/52ed70783405f51c2633be9749ec7ec8ea8fd01f/debian/mariadb-server-10.5.README.Debian#L76-95>`_. Since this formula is currently targeted to Debian only, there is no option to set the root password.
+- Certificates are automatically generated if configured.
+- Optionally, there is also support for initializing a connection to HashiCorp Vault.
+- The MariaDB root user has no password by default and running ``mysql_secure_installation`` `is discouraged <https://salsa.debian.org/mariadb-team/mariadb-10.5/-/blob/52ed70783405f51c2633be9749ec7ec8ea8fd01f/debian/mariadb-server-10.5.README.Debian#L76-95>`_. There is no option to set the root password.
 
 Configuration
 -------------
@@ -62,8 +64,11 @@ The following states are found in this formula:
 *Meta-state*.
 
 This installs the mariadb package,
-manages the mariadb configuration file
-and then starts the associated mariadb service.
+manages the mariadb configuration,
+creates TLS certificates if they have been configured,
+starts the MariaDB service,
+initializes a Vault connection if configured
+and then manages configured databases and user accounts.
 
 
 ``mariadb.package``
@@ -83,10 +88,40 @@ Manages the mariadb service configuration.
 Has a dependency on `mariadb.package`_.
 
 
+``mariadb.cert``
+^^^^^^^^^^^^^^^^
+Manages MariaDB server/client certificates as well as the trusted
+root CA certificate.
+
+Pulls the certificate paths directly from the configuration.
+All three values ``ssl_key``, ``ssl_cert`` and ``ssl_ca`` must be specified
+in ``mysqld``/``mariadb`` (server) or ``mysql`` (client) for this
+state to apply.
+
+
 ``mariadb.service``
 ^^^^^^^^^^^^^^^^^^^
 Starts the mariadb service and enables it at boot time.
+If ``manage_firewall`` is true, will also ensure the service
+ports are exposed.
 Has a dependency on `mariadb.config`_.
+
+Notes for Galera (``install:galera`` is true):
+
+  * If ``config:mariadb:wsrep_cluster_address`` is unspecified, will initialize a new cluster.
+  * If you need to bootstrap a cluster after shutting down all nodes,
+    you will need to pass ``pillar='{"galera_bootstrap": false}'`` to ``state.apply``.
+  * Ensure that all service ports are exposed to other nodes in the cluster, otherwise
+    starting the service will fail.
+
+
+``mariadb.vault``
+^^^^^^^^^^^^^^^^^
+Connects the local database to a Vault database secret plugin
+and manages associated roles.
+
+Requires ``vault:init`` set to true to be included in the
+meta state by default.
 
 
 ``mariadb.databases``
@@ -107,6 +142,9 @@ Has a dependency on `mariadb.databases`_.
 
 Undoes everything performed in the ``mariadb`` meta-state
 in reverse order, i.e.
+removes managed databases if ``clean_databases`` is true,
+removes managed user accounts,
+removes the Vault connection if configured,
 stops the service,
 removes the configuration file and then
 uninstalls the package.
@@ -130,9 +168,20 @@ Removes the configuration of the mariadb service and has a
 dependency on `mariadb.service.clean`_.
 
 
+``mariadb.cert.clean``
+^^^^^^^^^^^^^^^^^^^^^^
+Removes the managed MariaDB server/client certificates as well as the trusted
+root CA certificate.
+
+
 ``mariadb.service.clean``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 Stops the mariadb service and disables it at boot time.
+
+
+``mariadb.vault.clean``
+^^^^^^^^^^^^^^^^^^^^^^^
+Removes the Vault connection, associated roles and the ``vault`` user account.
 
 
 ``mariadb.databases.clean``

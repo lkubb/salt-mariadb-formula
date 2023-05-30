@@ -1,0 +1,42 @@
+{#- vim ft=jinja #}
+
+{#-
+      Merge default config values for distrib/install method into config
+#}
+{%- do mapdata.config.update(salt["defaults.merge"](mapdata.lookup.config_defaults[mapdata.install.method], mapdata.config, in_place=false)) %}
+
+{#-
+      Autodiscover the socket depending on config and installation method
+#}
+{%- set socket =
+        (mapdata.config.get("mariadb") or mapdata.config.get("mysqld", {})).get(
+            "socket", mapdata.lookup.socket[mapdata.install.method]
+        )
+%}
+{%- do mapdata.update({"_socket": socket}) %}
+
+{#-
+      Merge mandatory galera options, if enabled.
+      Automatically secure Galera traffic if certificates are generated.
+#}
+{%- if mapdata.install.galera %}
+{%-   do mapdata.config.update(salt["defaults.merge"]({"mariadb": mapdata.lookup.config_galera}, mapdata.config, in_place=false)) %}
+{%-   do mapdata.config.mariadb.update({"wsrep_provider": mapdata.lookup.libgalera[mapdata.install.method]}) %}
+{%-   if "wsrep_cluster_address" not in mapdata.config.mariadb %}
+{%-     do mapdata.config.mariadb.update({"wsrep_cluster_address": "gcomm://"}) %}
+{%-   endif %}
+{%-   set config = mapdata.config.get("mariadb", {}) %}
+{%-   set config2 = mapdata.config.get("mysqld", {}) %}
+{%-   if    (config.get("ssl_cert") or config2.get("ssl_cert")) and
+            (config.get("ssl_key") or config2.get("ssl_key")) and
+            (config.get("ssl_ca") or config2.get("ssl_ca")) %}
+{%-     if "wsrep_provider_options" not in mapdata.config.mariadb %}
+{%-       do mapdata.config.mariadb.update({"wsrep_provider_options": {}}) %}
+{%-     endif %}
+{%-     for param in ["ssl_key", "ssl_cert", "ssl_ca"] %}
+{%-       if "socket." ~ param not in mapdata.config.mariadb.wsrep_provider_options %}
+{%-         do mapdata.config.mariadb.wsrep_provider_options.update({"socket." ~ param: config.get(param) or config2.get(param)}) %}
+{%-       endif %}
+{%-     endfor %}
+{%-   endif %}
+{%- endif %}

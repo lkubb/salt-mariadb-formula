@@ -1,3 +1,5 @@
+{#- vim ft=jinja #}
+
 {%- macro render_opt(name, val) %}
 {%-   if val is not none %}
 {%-     if val is not integer and val in [true, false] and val %}
@@ -5,9 +7,20 @@
 {%-     else %}
 {%-       set pretty_width = 40 - (name | length) %}
 {%-       if val | is_list %}
-{%-         for item in val %}
+{%-         if name.startswith("wsrep_") %}
+{%-           set prefix=[""] %}
+{%-           if name == "wsrep_cluster_address" %}
+{%-             do prefix.append("gcomm://") %}
+{%-           endif %}
+  {{ name ~ (" " * pretty_width) }} = {{ prefix | last }}{{ val | join(",") }}
+{%-         else %}
+{%-           for item in val %}
   {{ name ~ (" " * pretty_width) }} = {{ item }}
-{%-         endfor %}
+{%-           endfor %}
+{%-         endif %}
+{#- This will change in MariaDB 11 - https://jira.mariadb.org/browse/MDEV-22570 #}
+{%-       elif val is mapping and name.startswith("wsrep_") %}
+  {{ name ~ (" " * pretty_width) }} = "{% for k, v in val.items() %}{{ k }}={{ v if v is not boolean else v | lower }}{% if not loop.last %};{% endif %}{% endfor %}"
 {%-       else %}
   {{ name ~ (" " * pretty_width) }} = {{ val }}
 {%-       endif %}
@@ -23,6 +36,15 @@
 [{{ group }}]
 {%-     for conf, val in mariadb.config[group].items() %}
 {{- render_opt(conf, val) }}
+{%-     endfor %}
+{%-   elif group.endswith("*") %}
+{%-     for confgroup in mariadb.config %}
+{%-       if confgroup.startswith(group[:-1]) %}
+[{{ confgroup }}]
+{%-         for conf, val in mariadb.config[confgroup].items() %}
+{{- render_opt(conf, val) }}
+{%-         endfor %}
+{%-       endif %}
 {%-     endfor %}
 {%-   endif %}
 {%- endfor %}

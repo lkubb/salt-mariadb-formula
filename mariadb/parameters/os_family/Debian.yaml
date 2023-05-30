@@ -51,19 +51,31 @@ values:
         - mysqld
         - embedded
         - mariadb*
-  config:
-    mysqld:
-      user: mysql
-      pid_file: /run/mysqld/mysqld.pid
-      basedir: /usr
-      datadir: /var/lib/mysql
-      tmpdir: /tmp
-      lc_messages_dir: /usr/share/mysql
-      lc_messages: en_us
-      skip_external_locking: true
-      skip_name_resolve: false
-      bind_address: 127.0.0.1
-      expire_logs_days: 10
-      character_set_server: utf8mb4
-      collation_server: utf8mb4_general_ci
+    config_defaults:
+      pkg:
+        mysqld:
+          user: mysql
+          pid_file: /run/mysqld/mysqld.pid
+          basedir: /usr
+          datadir: /var/lib/mysql
+          tmpdir: /tmp
+          lc_messages_dir: /usr/share/mysql
+          lc_messages: en_us
+          skip_external_locking: true
+          skip_name_resolve: false
+          bind_address: 127.0.0.1
+          expire_logs_days: 10
+          character_set_server: utf8mb4
+          collation_server: utf8mb4_general_ci
+      repo:
+        mysqld:
+          user: mysql  # commented out afair
+          pid_file: /run/mysqld/mysqld.pid
+          basedir: /usr
+          datadir: /var/lib/mysql  # commented out afair
+          tmpdir: /tmp  # commented out afair
+          bind_address: 127.0.0.1
+          expire_logs_days: 10
+          character_set_server: utf8mb4
+          collation_server: utf8mb4_general_ci
 ...

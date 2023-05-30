@@ -14,7 +14,7 @@ MariaDB Formula
    :scale: 100%
    :target: https://github.com/pre-commit/pre-commit
 
-Manage MariaDB with Salt.
+Manage MariaDB or a Galera cluster of MariaDB nodes with Salt.
 
 .. contents:: **Table of Contents**
    :depth: 1
@@ -41,7 +41,9 @@ If you need (non-default) configuration, please refer to:
 
 Special notes
 -------------
-- On Debian, MariaDB root user has no password by default and running ``mysql_secure_installation`` `is discouraged <https://salsa.debian.org/mariadb-team/mariadb-10.5/-/blob/52ed70783405f51c2633be9749ec7ec8ea8fd01f/debian/mariadb-server-10.5.README.Debian#L76-95>`_. Since this formula is currently targeted to Debian only, there is no option to set the root password.
+- Certificates are automatically generated if configured.
+- Optionally, there is also support for initializing a connection to HashiCorp Vault.
+- The MariaDB root user has no password by default and running ``mysql_secure_installation`` `is discouraged <https://salsa.debian.org/mariadb-team/mariadb-10.5/-/blob/52ed70783405f51c2633be9749ec7ec8ea8fd01f/debian/mariadb-server-10.5.README.Debian#L76-95>`_. There is no option to set the root password.
 
 Configuration
 -------------

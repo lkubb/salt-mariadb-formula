@@ -18,7 +18,7 @@ MariaDB database {{ db }} is present:
 {%-   if config.get("collate") %}
     - collate: {{ config.collate }}
 {%-   endif %}
-    - connection_unix_socket: {{ mariadb.lookup.socket }}
+    - connection_unix_socket: {{ mariadb._socket }}
     - require:
       - sls: {{ sls_service_running }}
 {%- endfor %}
@@ -28,7 +28,7 @@ MariaDB database {{ db }} is present:
 Unwanted MariaDB databases are absent:
   mysql_database.absent:
     - names: {{ mariadb.databases_absent | json }}
-    - connection_unix_socket: {{ mariadb.lookup.socket }}
+    - connection_unix_socket: {{ mariadb._socket }}
     - require:
       - sls: {{ sls_service_running }}
 {%- endif %}

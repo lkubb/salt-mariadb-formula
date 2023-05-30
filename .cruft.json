@@ -26,15 +26,90 @@
       "subcomponent_config": "",
       "git_username": "lkubb",
       "lookup": {
-        "socket": "/run/mysqld/mysqld.sock",
+        "socket": {
+          "pkg": "/run/mysqld/mysqld.sock",
+          "repo": "/run/mysqld/mysqld.sock"
+        },
+        "user": "mysql",
+        "group": "mysql",
         "pkg": {
-          "client": "mariadb-client",
+          "client": {
+            "pkg": "mariadb-client",
+            "repo": "mariadb-client"
+          },
           "pip": "pymysql",
           "python": "python3-mysqldb",
-          "server": "mariadb-server"
+          "server": {
+            "pkg": "mariadb-server",
+            "repo": "mariadb-server"
+          },
+          "galera": {
+            "pkg": false,
+            "repo": false
+          }
+        },
+        "libgalera": {
+          "pkg": "/usr/lib/galera/libgalera_smm.so",
+          "repo": "/usr/lib/galera/libgalera_smm.so"
+        },
+        "config_defaults": {
+          "pkg": {
+            "client": {},
+            "client-mariadb": {},
+            "mysql": {},
+            "mysql_upgrade": {},
+            "mysqladmin": {},
+            "mysqlbinlog": {},
+            "mysqlcheck": {},
+            "mysqldump": {},
+            "mysqlimport": {},
+            "mysqlshow": {},
+            "mysqlslap": {},
+            "galera": {},
+            "server": {},
+            "mysqld": {},
+            "embedded": {}
+          },
+          "repo": {
+            "client": {},
+            "client-mariadb": {},
+            "mysql": {},
+            "mysql_upgrade": {},
+            "mysqladmin": {},
+            "mysqlbinlog": {},
+            "mysqlcheck": {},
+            "mysqldump": {},
+            "mysqlimport": {},
+            "mysqlshow": {},
+            "mysqlslap": {},
+            "galera": {},
+            "server": {},
+            "mysqld": {},
+            "embedded": {}
+          }
+        },
+        "config_galera": {
+          "binlog_format": "ROW",
+          "default_storage_engine": "InnoDB",
+          "innodb_autoinc_lock_mode": 2,
+          "innodb_doublewrite": 1,
+          "wsrep_on": "ON"
         }
       },
       "settings": {
+        "cert": {
+          "ca_server": null,
+          "cn": null,
+          "root": "",
+          "intermediate": [],
+          "san": [],
+          "signing_policy": null,
+          "signing_private_key": null,
+          "signing_private_key_passphrase": null,
+          "signing_cert": null,
+          "days_remaining": 7,
+          "days_valid": 30
+        },
         "config": {},
         "clean_databases": false,
         "databases": {},
@@ -47,7 +122,22 @@
           "method": "pkg",
           "server": true,
           "version": "10.11"
-        }
+        },
+        "manage_firewall": false,
+        "vault": {
+          "connection_name": "mariadb",
+          "database_mount": "database",
+          "init": false,
+          "mariadb_host": null,
+          "mariadb_port": null,
+          "plugin_version": null,
+          "max_open_connections": 4,
+          "max_idle_connections": 0,
+          "max_connection_lifetime": "0s",
+          "tls_server_name": "",
+          "tls_skip_verify": false
+        },
+        "vault_roles": []
       },
       "_template": "https://github.com/lkubb/salt-template-formula"
     }

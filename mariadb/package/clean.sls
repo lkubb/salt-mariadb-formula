@@ -17,10 +17,13 @@ MariaDB is removed:
   pkg.removed:
     - pkgs:
 {%- if mariadb.install.client %}
-      - {{ mariadb.lookup.pkg.client }}
+      - {{ mariadb.lookup.pkg.client[mariadb.install.method] }}
 {%- endif %}
 {%- if mariadb.install.server %}
-      - {{ mariadb.lookup.pkg.server }}
+      - {{ mariadb.lookup.pkg.server[mariadb.install.method] }}
+{%-   if mariadb.install.galera and mariadb.lookup.pkg.galera[mariadb.install.method] %}
+      - {{ mariadb.lookup.pkg.galera[mariadb.install.method] }}
+{%-   endif %}
 {%- endif %}
     - require:
       - sls: {{ sls_config_clean }}

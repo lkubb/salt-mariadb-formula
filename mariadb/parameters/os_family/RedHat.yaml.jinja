@@ -14,6 +14,48 @@
 values:
   lookup:
     pkg_manager: yum
+    pkg:
+      client:
+        repo: MariaDB-client
+      galera:
+        pkg: mariadb-server-galera
+      server:
+        repo: MariaDB-server
+    socket:
+      pkg: /var/lib/mysql/mysql.sock
+      repo: /var/lib/mysql/mysql.sock
+    config: /etc/my.cnf
+    config_dir: /etc/my.cnf.d
+    config_files:
+      client: client.cnf
+      mysql-clients: mysql-clients.cnf
+      galera: galera.cnf
+      server: server.cnf
+    group_file_mapping:
+      client:
+        - client
+        - client-mariadb
+      mysql-clients:
+        - mysql
+        - mysql_upgrade
+        - mysqladmin
+        - mysqlbinlog
+        - mysqlcheck
+        - mysqldump
+        - mysqlimport
+        - mysqlshow
+        - mysqlslap
+      # This is actually part of `server` in RH/official repo pkgs, but I like the Debian way better
+      galera:
+        - galera
+      server:
+        - server
+        - mysqld
+        - embedded
+        - mariadb*
+    libgalera:
+      pkg: /usr/lib64/galera/libgalera_smm.so
+      repo: /usr/lib64/galera-4/libgalera_smm.so
     repos:
       stable:
         humanname: MariaDB stable
@@ -24,4 +66,11 @@ values:
         repo_gpgcheck: 1
         sslverify: 1
         sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+    config_defaults:
+      pkg:
+        mysqld:
+          datadir: /var/lib/mysql
+          socket: /var/lib/mysql/mysql.sock
+          log-error: /var/log/mariadb/mariadb.log
+          pid-file: /run/mariadb/mariadb.pid
 ...

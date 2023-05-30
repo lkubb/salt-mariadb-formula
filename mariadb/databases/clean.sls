@@ -12,5 +12,5 @@
 Wanted MariaDB databases are absent:
   mysql_database.absent:
     - names: {{ mariadb.databases.keys() | list | json }}
-    - connection_unix_socket: {{ mariadb.lookup.socket }}
+    - connection_unix_socket: {{ mariadb._socket }}
 {%- endif %}

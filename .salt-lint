@@ -1,6 +1,8 @@
 # vim: ft=yaml
 ---
-exclude_paths: []
+exclude_paths:
+  - mariadb/files/default/my.cnf.j2
+  - mariadb/files/default/scope.cnf.j2
 rules: {}
 skip_list:
   # Using `salt-lint` for linting other files as well, such as Jinja macros/templates

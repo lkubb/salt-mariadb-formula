@@ -16,14 +16,14 @@ Wanted grants for user {{ user }} are absent:
 {%-     for db in config.grants %}
       - {{ user }}_{{ db }}
 {%-     endfor %}
+    - connection_unix_socket: {{ mariadb._socket }}
 {%-   endif %}
 {%- endfor %}
-    - connection_unix_socket: {{ mariadb.lookup.socket }}
 
 {%- if mariadb.users %}
 
 Wanted MariaDB users are absent:
   mysql_user.absent:
     - names: {{ mariadb.users.keys() | list | json }}
-    - connection_unix_socket: {{ mariadb.lookup.socket }}
+    - connection_unix_socket: {{ mariadb._socket }}
 {%- endif %}
