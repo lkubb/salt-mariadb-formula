@@ -12,12 +12,8 @@ include:
 MariaDB database {{ db }} is present:
   mysql_database.present:
     - name: {{ db }}
-{%-   if config.get("character_set") %}
-    - character_set: {{ config.character_set }}
-{%-   endif %}
-{%-   if config.get("collate") %}
-    - collate: {{ config.collate }}
-{%-   endif %}
+    - character_set: {{ config.get("character_set", "null") }}
+    - collate: {{ config.get("collate", null) }}
     - connection_unix_socket: {{ mariadb._socket }}
     - require:
       - sls: {{ sls_service_running }}

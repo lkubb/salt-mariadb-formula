@@ -10,20 +10,23 @@ include:
   - {{ sls_config_file }}
   - {{ sls_databases_managed }}
 
-{%- for user, config in mariadb.users.items() %}
+{%- for user in mariadb.users %}
 
-MariaDB user {{ user }} is present:
+MariaDB user {{ user.name }} is present:
   mysql_user.present:
-    - name: {{ user }}
-{%-   if config.get("socket") %}
-    - unix_socket: {{ config.get("socket", false) }}
-{%-   elif config.get("password") %}
-    - password: {{ config.password }}
-{%-   elif config.get("password_hash") %}
-    - password_hash: {{ config.password_hash }}
-{%-   elif config.get("passwordless") %}
-    - passwordless: true
+    - name: {{ user.name }}
+    - host: {{ user.get("host", "localhost") }}
+{%-   if user.get("socket") %}
+    - unix_socket: {{ user.get("socket", false) }}
+{%-   elif user.get("password") %}
+    - password: {{ user.password }}
+{%-   elif user.get("password_hash") %}
+    - password_hash: {{ user.password_hash }}
+{%-   elif user.get("passwordless") %}
+    - allow_passwordless: true
 {%-   endif %}
+    - password_column: {{ user.get("password_column", "null") }}
+    - auth_plugin: {{ user.get("auth_plugin", "mysql_native_password") }}
     - connection_unix_socket: {{ mariadb._socket }}
     - require:
       - Salt can manage MariaDB
@@ -34,42 +37,60 @@ MariaDB user {{ user }} is present:
 
 Unwanted MariaDB users are absent:
   mysql_user.absent:
-    - names: {{ mariadb.users_absent | json }}
+    - names:
+{%-   for user in mariadb.users_absent %}
+{%-     if user is dict %}
+      - {{ user | first }}:
+        - host: {{ user.get("host", "localhost") }}
+{%-     else %}
+      - {{ user }}:
+        - host: localhost
+{%-     endif %}
+{%-   endfor %}
     - connection_unix_socket: {{ mariadb._socket }}
     - require:
       - Salt can manage MariaDB
       - sls: {{ sls_config_file }}
 {%- endif %}
 
-{%- for user, config in mariadb.users.items() %}
-{%-   if config.get("grants") %}
+{%- for user in mariadb.users %}
+{%-   if user.get("grants") %}
 
-Wanted grants for user {{ user }} are present:
+Wanted grants for user {{ user.name }} are present:
   mysql_grants.present:
     - names:
-{%-     for db, grants in config.grants.items() %}
-      - {{ user }}_{{ db }}:
-        - user: {{ user }}
-        - grant: {{ grants | join(",") }}
-        - database: {{ db }}
+{%-     for grant in user.grants %}
+      - {{ user.name }}_{{ grant.get("db", loop.index) }}:
+        - user: {{ user.name }}
+        - grant: {{ grant.get("grants", []) | join(",") }}
+        - host: {{ user.get("host", "localhost") }}
+        - database: {{ grant.get("db", "null") }}
+        - grant_option: {{ user.get("grant_option") | to_bool }}
+        - escape: {{ user.get("escape", True) | to_bool }}
+        - revoke_first: {{ user.get("revoke_first") | to_bool }}
+        - ssl_option: {{ user.get("ssl_option", []) | json }}
 {%-     endfor %}
     - connection_unix_socket: {{ mariadb._socket }}
     - require:
-      - MariaDB user {{ user }} is present
+      - MariaDB user {{ user.name }} is present
       - sls: {{ sls_databases_managed }}
 {%-   endif %}
 
-{%-   if config.get("grants_unwanted") %}
+{%-   if user.get("grants_unwanted") %}
 
-Unwanted grants for user {{ user }} are absent:
+Unwanted grants for user {{ user.name }} are absent:
   mysql_grants.absent:
     - names:
-{%-     for db in config.grants_unwanted %}
-      - {{ user }}_{{ db }}
+{%-     for grant in user.grants_unwanted %}
+      - {{ user.name }}_{{ grant.get("db", loop.index) }}:
+        - user: {{ user.name }}
+        - grant: {{ grant.get("grants", []) | join(",") }}
+        - database: {{ grant.get("db", "null") }}
+        - host: {{ user.get("host", "localhost") }}
 {%-     endfor %}
     - connection_unix_socket: {{ mariadb._socket }}
     - require:
-      - MariaDB user {{ user }} is present
+      - MariaDB user {{ user.name }} is present
       - sls: {{ sls_databases_managed }}
 {%-   endif %}
 {%- endfor %}
