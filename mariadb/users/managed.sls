@@ -12,7 +12,7 @@ include:
 
 {%- for user in mariadb.users %}
 
-MariaDB user {{ user.name }} is present:
+MariaDB user {{ user.name }}@{{ user.get("host", "localhost") }} is present:
   mysql_user.present:
     - name: {{ user.name }}
     - host: {{ user.get("host", "localhost") }}
@@ -72,7 +72,7 @@ Wanted grants for user {{ user.name }} are present:
 {%-     endfor %}
     - connection_unix_socket: {{ mariadb._socket }}
     - require:
-      - MariaDB user {{ user.name }} is present
+      - MariaDB user {{ user.name }}@{{ user.get("host", "localhost") }} is present
       - sls: {{ sls_databases_managed }}
 {%-   endif %}
 
@@ -90,7 +90,7 @@ Unwanted grants for user {{ user.name }} are absent:
 {%-     endfor %}
     - connection_unix_socket: {{ mariadb._socket }}
     - require:
-      - MariaDB user {{ user.name }} is present
+      - MariaDB user {{ user.name }}@{{ user.get("host", "localhost") }} is present
       - sls: {{ sls_databases_managed }}
 {%-   endif %}
 {%- endfor %}

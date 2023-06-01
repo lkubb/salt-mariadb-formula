@@ -27,6 +27,17 @@ Vault user account is present:
     - require:
       - sls: {{ sls_service_running }}
 
+# User accounts need the privileges which they issue to other ones
+Vault user account has all privileges:
+  mysql_grants.present:
+    - grant: all privileges
+    - database: '*.*'
+    - user: vault
+    - host: '%'
+    - connection_unix_socket: {{ mariadb._socket }}
+    - require:
+      - Vault user account is present
+
 Vault MariaDB connection is managed:
   vault_db.connection_present:
     - name: {{ mariadb.vault.connection_name }}
@@ -45,7 +56,7 @@ Vault MariaDB connection is managed:
     - tls_server_name: {{ mariadb.vault.tls_server_name }}
     - tls_skip_verify: {{ mariadb.vault.tls_skip_verify }}
     - require:
-      - Vault user account is present
+      - Vault user account has all privileges
 
 {%- for role in mariadb.vault_roles %}
 
