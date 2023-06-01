@@ -2,7 +2,9 @@
 # yamllint disable rule:comments-indentation
 ---
 mariadb:
-
+    # Settings for certificate issuance.
+    # The states run only if `config:(mariadb|mysqld)|ssl_(ca|cert|key)`
+    # are defined.
   cert:
     ca_server: null
     cn: null
@@ -15,32 +17,91 @@ mariadb:
     signing_policy: null
     signing_private_key: null
     signing_private_key_passphrase: null
+    # Whether to also remove databases when applying clean states.
   clean_databases: false
+    # MariaDB configuration. The default configuration of the
+    # installation method will be merged as a base.
   config: {}
+    # Mapping of database names to settings for this particular database.
+    # Supported settings are `character_set` and `collate`.
   databases: {}
+    # List of database names that should be removed if present.
+    # This will apply regardless of `clean_databases`.
   databases_absent: []
+    # Installation settings.
   install:
+      # Install the MariaDB client.
     client: true
+      # Install Galera packages. This only has an effect on RedHat
+      # installation from the system repositories, where the packages
+      # are split.
     galera: false
+      # Installation method.
+      # `pkg` (from system packages) or `repo` (from official repositiories)
     method: pkg
+      # Install the MariaDB server.
     server: true
+      # MariaDB version to install. This is only respected when the
+      # installation method is `repo` and affects the specific repo
+      # that will be installed.
     version: '10.11'
+    # For RedHat, ensure that MariaDB server and Galera ports are open.
   manage_firewall: false
+    # List of users to creation settings. Also contains settings for grants.
+    # See example below.
   users: {}
+  # - name: foo
+  #   socket: true
+  #   passwordless: true
+  #   grants:
+  #     - db: exampledb.*
+  #       grants:
+  #         - all privileges
+  ## also respected: `password_column`, `auth_plugin`
+  # - name: bar
+  #   host: my.example.host
+  #   password_hash: cafebabedabbad00
+  #   grants:
+  #     - db: exampledb.*
+  #       grants:
+  #         - select
+    # List of user names (for localhost) or dicts with
+    # `name` and `host` of users to delete when present.
   users_absent: []
+    # This formula also supports managing a user account
+    # and the connection to HashiCorp Vault.
+    # This can be applied with `mariadb.vault` or,
+    # if `init` below is true, by default with `mariadb`.
   vault:
+      # The name of the connection in the database secret backend.
     connection_name: mariadb
+      # The mount where the database secret backend is mounted.
     database_mount: database
+      # Include `mariadb.vault` in the `mariadb` meta state.
     init: false
+      # The hostname or IP Vault should connect to.
     mariadb_host: null
+      # The port Vault should connect to.
     mariadb_port: null
+      # Misc settings for the MySQL secret backend, see its docs.
     max_connection_lifetime: 0s
     max_idle_connections: 0
     max_open_connections: 4
     plugin_version: null
     tls_server_name: ''
     tls_skip_verify: false
+    # List of role definitions for the database secret backend.
+    # See the example below.
   vault_roles: []
+  # - name: examplerole
+  #   definition:
+  #     - CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';
+  #     - GRANT SELECT ON exampledb.* TO '{{name}}'@'%';
+  ## the following are optional
+  #   revocation:
+  #     - DROP USER '{{name}}'@'%';
+  #   default_ttl: null
+  #   max_ttl: null
 
   lookup:
     config_defaults:

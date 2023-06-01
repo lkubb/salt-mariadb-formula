@@ -114,7 +114,7 @@
         "clean_databases": false,
         "databases": {},
         "databases_absent": [],
-        "users": {},
+        "users": [],
         "users_absent": [],
         "install": {
           "client": true,

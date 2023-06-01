@@ -93,7 +93,7 @@ mariadb:
     server: true
     version: '10.11'
   manage_firewall: false
-  users: {}
+  users: []
   users_absent: []
   vault:
     connection_name: mariadb

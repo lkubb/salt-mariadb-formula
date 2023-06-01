@@ -54,7 +54,10 @@ Vault MariaDB role {{ role.name }} is present:
     - name: {{ role.name }}
     - mount: {{ mariadb.vault.database_mount }}
     - connection: {{ mariadb.vault.connection_name }}
-    - creation_statements: {{ role.definition | json }}
+    - creation_statements: '{{ role.definition | json }}'
+{%-   if role.get("revocation") %}
+    - revocation_statements: '{{ role.revocation | json }}'
+{%-   endif %}
     - default_ttl: {{ role.get("default_ttl") or "null" }}
     - max_ttl: {{ role.get("max_ttl") or "null" }}
     - require:
