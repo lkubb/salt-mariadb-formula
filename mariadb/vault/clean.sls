@@ -22,10 +22,23 @@ Vault MariaDB connection is absent:
     - name: {{ mariadb.vault.connection_name }}
     - mount: {{ mariadb.vault.database_mount }}
 
-Vault user account is absent:
-  mysql_user.absent:
-    - name: vault
-    - host: '%'
+{%- if mariadb.vault.user.keep_managing %}
+
+Vault user account privileges are absent:
+  mysql_grants.absent:
+    - grant: {{ mariadb.vault.user.privileges | json }}
+    - database: '{{ mariadb.vault.user.db }}'
+    - user: {{ mariadb.vault.user.name }}
+    - host: '{{ mariadb.vault.user.host }}'
     - connection_unix_socket: {{ mariadb._socket }}
     - require:
       - Vault MariaDB connection is absent
+
+Vault user account is absent:
+  mysql_user.absent:
+    - name: {{ mariadb.vault.user.name }}
+    - host: {{ mariadb.vault.user.host }}
+    - connection_unix_socket: {{ mariadb._socket }}
+    - require:
+      - Vault user account privileges are absent
+{%- endif %}

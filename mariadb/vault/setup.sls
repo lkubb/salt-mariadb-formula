@@ -15,28 +15,41 @@ include:
 
 Vault user account is present:
   mysql_user.present:
-    - name: vault
+    - name: {{ mariadb.vault.user.name }}
     - password: {{ vault_pw }}
-    - host: '%'
+    - host: '{{ mariadb.vault.user.host }}'
     - connection_unix_socket: {{ mariadb._socket }}
     - unless:
+{%- if mariadb.vault.user.keep_managing %}
       - fun: mysql.user_info
-        user: vault
-        host: '%'
+        user: {{ mariadb.vault.user.name }}
+        host: '{{ mariadb.vault.user.host }}'
         connection_unix_socket: {{ mariadb._socket }}
+{%- else %}
+      - '{{ salt["vault_db.fetch_connection"](mariadb.vault.connection_name, mount=mariadb.vault.database_mount) is not none | lower }}'
+{%- endif %}
     - require:
       - sls: {{ sls_service_running }}
 
 # User accounts need the privileges which they issue to other ones
-Vault user account has all privileges:
+Vault user account has privileges:
   mysql_grants.present:
-    - grant: all privileges
-    - database: '*.*'
-    - user: vault
-    - host: '%'
+    - names:
+{%- for grant in mariadb.vault.user.grants %}
+        - vault_grant_{{ grant.db }}_{{ grant.grant }}:
+          - grant: {{ grant.grant }}
+          - database: '{{ grant.db }}'
+{%- endfor %}
+    - user: {{ mariadb.vault.user.name }}
+    - host: '{{ mariadb.vault.user.host }}'
     - connection_unix_socket: {{ mariadb._socket }}
+{%- if not mariadb.vault.user.keep_managing %}
+    - onchanges:
+      - Vault user account is present
+{%- else %}
     - require:
       - Vault user account is present
+{%- endif %}
 
 Vault MariaDB connection is managed:
   vault_db.connection_present:
@@ -56,7 +69,7 @@ Vault MariaDB connection is managed:
     - tls_server_name: {{ mariadb.vault.tls_server_name }}
     - tls_skip_verify: {{ mariadb.vault.tls_skip_verify }}
     - require:
-      - Vault user account has all privileges
+      - Vault user account has privileges
 
 {%- for role in mariadb.vault_roles %}
 

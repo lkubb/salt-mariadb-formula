@@ -73,6 +73,21 @@ mariadb:
     # This can be applied with `mariadb.vault` or,
     # if `init` below is true, by default with `mariadb`.
   vault:
+      # Settings regarding the user account Vault will receive
+    user:
+        # The host the user will be able to connect from
+      host: '%'
+        # A list of grants for the Vault user
+      grants:
+            # The databases the privileges will apply to
+        - db: '*.*'
+            # The privilege to grant
+          grant: all privileges
+        # Keep managing the user account after the Vault
+        # connection has been initialized.
+      keep_managing: true
+        # The user name
+      name: vault
       # The name of the connection in the database secret backend.
     connection_name: mariadb
       # The mount where the database secret backend is mounted.

@@ -128,6 +128,17 @@
           "connection_name": "mariadb",
           "database_mount": "database",
           "init": false,
+          "user": {
+            "name": "vault",
+            "host": "%",
+            "grants": [
+              {
+                "db": "*.*",
+                "grant": "all privileges"
+              }
+            ],
+            "keep_managing": true
+          },
           "mariadb_host": null,
           "mariadb_port": null,
           "plugin_version": null,

@@ -107,6 +107,13 @@ mariadb:
     plugin_version: null
     tls_server_name: ''
     tls_skip_verify: false
+    user:
+      grants:
+        - db: '*.*'
+          grant: all privileges
+      host: '%'
+      keep_managing: true
+      name: vault
   vault_roles: []
 
   tofs:
