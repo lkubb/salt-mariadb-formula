@@ -7,20 +7,14 @@
 {%-     else %}
 {%-       set pretty_width = 40 - (name | length) %}
 {%-       if val | is_list %}
-{%-         if name.startswith("wsrep_") %}
-{%-           set prefix=[""] %}
-{%-           if name == "wsrep_cluster_address" %}
-{%-             do prefix.append("gcomm://") %}
-{%-           endif %}
-  {{ name ~ (" " * pretty_width) }} = {{ prefix | last }}{{ val | join(",") }}
-{%-         else %}
-{%-           for item in val %}
-  {{ name ~ (" " * pretty_width) }} = {{ item }}
-{%-           endfor %}
+{%-         set prefix=[""] %}
+{%-         if name == "wsrep_cluster_address" %}
+{%-           do prefix.append("gcomm://") %}
 {%-         endif %}
+  {{ name ~ (" " * pretty_width) }} = {{ prefix | last }}{{ val | sort | join(",") }}
 {#- This will change in MariaDB 11 - https://jira.mariadb.org/browse/MDEV-22570 #}
 {%-       elif val is mapping and name.startswith("wsrep_") %}
-  {{ name ~ (" " * pretty_width) }} = "{% for k, v in val.items() %}{{ k }}={{ v if v is not boolean else v | lower }}{% if not loop.last %};{% endif %}{% endfor %}"
+  {{ name ~ (" " * pretty_width) }} = "{% for k, v in val | dictsort %}{{ k }}={{ v if v is not boolean else v | lower }}{% if not loop.last %};{% endif %}{% endfor %}"
 {%-       else %}
   {{ name ~ (" " * pretty_width) }} = {{ val }}
 {%-       endif %}
