@@ -66,9 +66,11 @@ Wanted grants for user {{ user.name }} are present:
         - host: {{ user.get("host", "localhost") }}
         - database: {{ grant.get("db", "null") }}
         - grant_option: {{ user.get("grant_option") | to_bool }}
-        - escape: {{ user.get("escape", True) | to_bool }}
+        - escape: {{ user.get("escape", true) | to_bool }}
         - revoke_first: {{ user.get("revoke_first") | to_bool }}
-        - ssl_option: {{ user.get("ssl_option", []) | json }}
+{%-       if user.get("ssl_option") %}
+        - ssl_option: {{ user.ssl_option | json }}
+{%-       endif %}
 {%-     endfor %}
     - connection_unix_socket: {{ mariadb._socket }}
     - require:

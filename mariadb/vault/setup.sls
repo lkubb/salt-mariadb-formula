@@ -36,9 +36,15 @@ Vault user account has privileges:
   mysql_grants.present:
     - names:
 {%- for grant in mariadb.vault.user.grants %}
-        - vault_grant_{{ grant.db }}_{{ grant.grant }}:
+        - vault_grant_{{ grant.get("db", loop.index) }}_{{ grant.grant }}:
           - grant: {{ grant.grant }}
-          - database: '{{ grant.db }}'
+          - database: {{ grant.get("db", "null") }}
+          - grant_option: {{ grant.get("grant_option") | to_bool }}
+          - escape: {{ grant.get("escape", true) | to_bool }}
+          - revoke_first: {{ grant.get("revoke_first") | to_bool }}
+{%-   if grant.get("ssl_option") %}
+          - ssl_option: {{ grant.ssl_option | json }}
+{%-   endif %}
 {%- endfor %}
     - user: {{ mariadb.vault.user.name }}
     - host: '{{ mariadb.vault.user.host }}'
