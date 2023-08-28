@@ -25,7 +25,7 @@ MariaDB server certificate private key is managed:
     - prereq:
       - MariaDB server certificate is managed
 {%-   endif %}
-    - makedirs: True
+    - makedirs: true
     - user: {{ mariadb.lookup.user }}
     - group: {{ mariadb.lookup.group }}
     - require:
@@ -54,7 +54,7 @@ MariaDB server certificate is managed:
     - mode: '0640'
     - user: {{ mariadb.lookup.user }}
     - group: {{ mariadb.lookup.group }}
-    - makedirs: True
+    - makedirs: true
     - append_certs: {{ mariadb.cert.intermediate | json }}
     - days_remaining: {{ mariadb.cert.days_remaining }}
     - days_valid: {{ mariadb.cert.days_valid }}
@@ -68,7 +68,7 @@ MariaDB CA cert is managed:
   file.managed:
     - name: {{ config.get("ssl_ca") or config2.get("ssl_ca") }}
     - contents: {{ ([mariadb.cert.root] + mariadb.cert.intermediate) | join("\n") | json }}
-    - makedirs: True
+    - makedirs: true
     - require:
       - sls: {{ sls_config_file }}
 
@@ -90,7 +90,7 @@ MariaDB client certificate private key is managed:
     - prereq:
       - MariaDB client certificate is managed
 {%-   endif %}
-    - makedirs: True
+    - makedirs: true
     - user: {{ mariadb.lookup.user }}
     - group: {{ mariadb.lookup.group }}
     - require:
@@ -119,7 +119,7 @@ MariaDB client certificate is managed:
     - mode: '0640'
     - user: {{ mariadb.lookup.user }}
     - group: {{ mariadb.lookup.group }}
-    - makedirs: True
+    - makedirs: true
     - append_certs: {{ mariadb.cert.intermediate | json }}
     - days_remaining: {{ mariadb.cert.days_remaining }}
     - days_valid: {{ mariadb.cert.days_valid }}
@@ -136,7 +136,7 @@ MariaDB CA cert is managed:
   file.managed:
     - name: {{ config.get("ssl_ca") or config2.get("ssl_ca") }}
     - contents: {{ ([mariadb.cert.root] + mariadb.cert.intermediate) | join("\n") | json }}
-    - makedirs: True
+    - makedirs: true
     - require:
       - sls: {{ sls_config_file }}
 {%-   endif %}

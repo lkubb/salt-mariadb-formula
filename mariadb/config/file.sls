@@ -44,7 +44,7 @@ MariaDB {{ scope }} config is managed:
     - mode: '0644'
     - user: root
     - group: {{ mariadb.lookup.rootgroup }}
-    - makedirs: True
+    - makedirs: true
     - template: jinja
     - require:
       - sls: {{ sls_package_install }}
