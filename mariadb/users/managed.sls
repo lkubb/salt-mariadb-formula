@@ -28,6 +28,10 @@ MariaDB user {{ user.name }}@{{ user.get("host", "localhost") }} is present:
     - password_column: {{ user.get("password_column", "null") }}
     - auth_plugin: {{ user.get("auth_plugin", "mysql_native_password") }}
     - connection_unix_socket: {{ mariadb._socket }}
+    # Sometimes, we're too fast after the service was restarted.
+    - retry:
+        attempts: 5
+        interval: 2
     - require:
       - Salt can manage MariaDB
       - sls: {{ sls_config_file }}
@@ -48,6 +52,10 @@ Unwanted MariaDB users are absent:
 {%-     endif %}
 {%-   endfor %}
     - connection_unix_socket: {{ mariadb._socket }}
+    # Sometimes, we're too fast after the service was restarted.
+    - retry:
+        attempts: 5
+        interval: 2
     - require:
       - Salt can manage MariaDB
       - sls: {{ sls_config_file }}
